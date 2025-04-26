@@ -1,8 +1,5 @@
 \section{Infrastructures}
-% Seed-Thinking-v1.5 is an Mixture-of-Experts (MoE) architecture \cite{moe} that contains around 200B parameters in total with 20B active parameters.
 
-%\subsection{Compute Clusters}
-%Seed-Thinking-v1.5 is trained in a cluster with 1024 Nvidia H800 GPUs. Each node in the H800 cluster contains 8 GPUs connected via NVLink. Across different nodes, InfiniBand (IB) interconnects are utilized for data communications.
 
 \subsection{Framework}
 The training framework is built using HybridFlow \cite{sheng2024hybridflow} programming abstraction. The whole training workload runs on top of a Ray \cite{ray} cluster. The dataloader and RL algorithm is implemented in a single process Ray Actor (single controller). The model training and response generation (rollout) is implemented in a Ray Worker Group. The Ray Worker Group exposes a set of APIs (e.g., generate\_response/train\_batch, etc,.), which runs heavy training/generation workload via SPMD (single program, multiple data) inside the Worker Group. The single controller invokes various APIs exposed by the Ray Worker Group to construct the training flow. HybridFlow programming abstraction enables fast prototyping of RL algorithm ideas without bothering with complex distributed systems.

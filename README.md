@@ -1,6 +1,6 @@
-# Zhijiang Lab LaTeX Paper Template
+# Zhejiang Lab LaTeX Paper Template
 
-This repository contains a LaTeX template for academic papers, designed for researchers at Zhijiang Lab.
+This repository contains a LaTeX template for academic papers, designed for researchers at Zhejiang Lab.
 
 ## Features
 
@@ -73,4 +73,4 @@ Or use your LaTeX editor's build function.
 
 ## License
 
-This template is provided for use by researchers at Zhijiang Lab. Please consult your institution's policies regarding the use and distribution of this template.
+This template is provided for use by researchers at Zhejiang Lab. Please consult your institution's policies regarding the use and distribution of this template.

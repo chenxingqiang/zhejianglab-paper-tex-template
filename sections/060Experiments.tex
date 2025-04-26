@@ -44,44 +44,8 @@ One of the primary benefits of adaptive difficulty training is improved training
 
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            width=0.9\linewidth,
-            height=6cm,
-            xlabel={Training Steps (thousands)},
-            ylabel={BeyondAIME Score (\%)},
-            xmin=0, xmax=500,
-            ymin=20, ymax=50,
-            legend pos=south east,
-            grid=both,
-            minor grid style={gray!25},
-            major grid style={gray!25},
-            xtick={0,100,200,300,400,500},
-        ]
-        
-        \addplot[very thick, blue] coordinates {
-            (0,22.3) (50,24.5) (100,28.2) (150,31.6) (200,35.1) (250,38.3) (300,41.2) (350,43.9) (400,46.2) (450,47.5) (500,48.0)
-        };
-        \addplot[very thick, dashed, red] coordinates {
-            (0,22.1) (50,23.8) (100,26.4) (150,28.9) (200,30.5) (250,33.2) (300,35.4) (350,37.8) (400,39.6) (450,41.7) (500,42.4)
-        };
-        \addplot[very thick, dotted, black] coordinates {
-            (0,22.4) (50,24.3) (100,27.1) (150,29.7) (200,32.3) (250,34.6) (300,36.8) (350,38.5) (400,40.3) (450,41.6) (500,42.9)
-        };
-        \addplot[very thick, dashdotted, green!60!black] coordinates {
-            (0,22.5) (50,25.8) (100,29.4) (150,33.2) (200,37.0) (250,40.3) (300,43.1) (350,45.2) (400,46.7) (450,47.8) (500,48.0)
-        };
-        
-        \draw[dashed] (350,43.9) -- (500,43.9);
-        \node[anchor=west] at (360,44.5) {\small Static Distribution (500k steps)};
-        
-        \draw[dashed] (190,43.9) -- (190,20);
-        \node[anchor=north] at (190,20.5) {\small AdaptDifficulty (190k steps)};
-        
-        \legend{AdaptDifficulty, Static Distribution, Manual Curriculum, Difficulty-Based}
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Training curves showing performance on BeyondAIME benchmark. AdaptDifficulty reaches the final performance of static distribution training in only 38\% of the training steps.}
+    \includegraphics[width=\textwidth]{figures/learning_efficiency.png}
+    \caption{Training curves showing performance across benchmarks. AdaptDifficulty reaches the final performance of static distribution training in significantly fewer training steps, demonstrating superior efficiency.}
     \label{fig:training-efficiency}
 \end{figure}
 
@@ -148,6 +112,15 @@ Key performance findings include:
     \item Transfer learning performance to non-trained domains (GPQA and ARC-AGI) shows significant improvements, indicating better generalization of reasoning capabilities
 \end{itemize}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/generalization_capabilities.png}
+    \caption{Generalization capabilities across different reasoning domains. The radar chart demonstrates AdaptDifficulty's superior generalization to diverse reasoning tasks including mathematical reasoning, code generation, scientific Q\&A, logical reasoning, symbolic manipulation, and knowledge integration.}
+    \label{fig:generalization-capabilities}
+\end{figure}
+
+Figure \ref{fig:generalization-capabilities} illustrates AdaptDifficulty's enhanced generalization capabilities across diverse reasoning domains. The model consistently outperforms baselines in both trained and untrained domains, showing particular strength in mathematical reasoning, code generation, and knowledge integration tasks. This demonstrates that the adaptive training approach develops fundamental reasoning skills that transfer effectively to new problem domains.
+
 \subsubsection{Reasoning Process Analysis}
 
 Beyond raw performance metrics, we analyze qualitative differences in the reasoning processes between models trained with different approaches. Figure \ref{fig:reasoning-quality} shows key reasoning quality metrics.
@@ -197,6 +170,8 @@ These metrics reveal important qualitative differences:
 
 \begin{table}[h]
 \centering
+\caption{Comprehensive performance comparison across diverse benchmarks}
+\label{tab:comprehensive-results}
 \begin{tabular}{p{3cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}}
 \toprule
 \multicolumn{6}{p{12cm}}{\textbf{Science}} \\
@@ -231,8 +206,6 @@ Collie & 73.1\%  & 34.2\% & 87.6\% & 33.6\% & 62.5\% \\
 IFEval & 87.4\% & 86.1\% & 93.7\% & 83.4\% & 91.5\% \\
 \bottomrule
 \end{tabular}
-\caption{Comprehensive performance comparison across diverse benchmarks}
-\label{tab:comprehensive-results}
 \end{table}
 \begin{flushleft}
 $^*$\footnotesize{Results from our internal sandbox, which may differ from the reported results due to inconsistencies in the testing environment.}
@@ -246,13 +219,8 @@ Notably, \method demonstrates less impressive results on SimpleQA. It is worth e
 \subsection{Human Evaluation Results}
 To evaluate model performance on subjective tasks, where automated metrics are insufficient to capture nuanced human preferences, we conduct human evaluations across a diverse suite of non-reasoning scenarios. Our assessments are designed to measure key dimensions of quality, such as coherence, relevance, creativity, and adherence to human-centric preferences, with a panel of domain-expert evaluators rating model outputs against Deepseek R1 under predefined rubrics. We use a 5-point ordinal scale, ranging from 0(very poor) to 4(excellent), and evaluate both models on session prompts with multiple rounds. Each full session is annotated with a binary win/loss outcome to capture the overall user experience and a single 0-4 score is assigned per-round.
 
-\method achieves an overall win ratio of 8.0\% on the evaluated sessions, indicating superiority in aligning with human-centric preferences. Further more, this win rate is consistent across diverse scenarios, from creative writing to humanities knowledge elaboration. Figure \ref{fig:rating_distribution} shows the per-round level score distribution.
+\method achieves an overall win ratio of 8.0\% on the evaluated sessions, indicating superiority in aligning with human-centric preferences. Furthermore, this win rate is consistent across diverse scenarios, from creative writing to humanities knowledge elaboration.
 
-\begin{figure}[H]
-    \includegraphics[width=1.0\textwidth]{figures/gsb.png}
-    \caption{Rating Distribution}
-    \label{fig:rating_distribution}
-\end{figure}
 % Here, we summarize the core findings from these human evaluations:
 
 
@@ -294,9 +262,7 @@ To evaluate model performance on subjective tasks, where automated metrics are i
     \caption{Consistent Algorithm Rankings. Seed-150B-MoE results are ablation-only with limited steps.}
     \label{tab:ranking}
   \end{minipage}
-  % \caption{Combined results from two experiments.}
-  \label{tab:combined}
 \end{table}
 
 
-%\subsection{Test Time Scaling Results}
+\subsection{Test Time Scaling Results}

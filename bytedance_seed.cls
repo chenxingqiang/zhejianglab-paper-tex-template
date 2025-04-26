@@ -183,7 +183,7 @@
     \fancyhead[L]{
         \raisebox{2mm}{
             \hspace{5mm}
-            \includegraphics[width=45mm]{seed/seed_logo.png}
+            \includegraphics[width=45mm]{seed/zhejianglab_logo.png}
         }
     }
 }

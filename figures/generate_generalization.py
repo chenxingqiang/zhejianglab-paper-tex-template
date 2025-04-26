@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate visualization for generalization capabilities
-of AdaptDifficulty across different reasoning tasks for the Zhijianglab paper.
+of AdaptDifficulty across different reasoning tasks for the Zhejianglab paper.
 """
 
 import matplotlib.pyplot as plt

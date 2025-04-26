@@ -1,31 +1,6 @@
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            ybar,
-            bar width=15pt,
-            width=0.95\linewidth,
-            height=7cm,
-            ymin=0, ymax=30,
-            symbolic x coords={Training Time, BeyondAIME, Codeforces, GPQA, Generalization},
-            xtick=data,
-            ylabel={Improvement (\%)},
-            legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1},
-            nodes near coords,
-            nodes near coords style={font=\small},
-            enlarge x limits=0.15,
-            ybar=5pt,
-        ]
-        
-        \addplot[fill=blue!60, pattern=north east lines] coordinates {
-            (Training Time, 23.1) (BeyondAIME, 18.5) (Codeforces, 16.8) (GPQA, 14.2) (Generalization, 19.7)};
-        \addplot[fill=gray!40] coordinates {
-            (Training Time, 12.4) (BeyondAIME, 10.3) (Codeforces, 9.7) (GPQA, 8.5) (Generalization, 11.2)
-        };
-
-        \legend{AdaptDifficulty, Static Curriculum}
-        \end{axis}
-    \end{tikzpicture}
+    \includegraphics[width=\textwidth]{figures/performance_comparison.png}
     \caption{Performance improvements of adaptive difficulty training versus static curriculum methods across different metrics}
     \label{fig:performance-comparison}
 \end{figure}
@@ -48,7 +23,7 @@ In this work, we present AdaptDifficulty, a novel training framework that addres
 \item[Automatic Problem Generation] We create a system capable of generating reasoning problems with controlled difficulty parameters, verified to have unique, solvable solutions. This expands the training data space dynamically as model capabilities increase, ensuring continuous challenge without manual curation.
 \end{description}
 
-We evaluate AdaptDifficulty across diverse reasoning benchmarks including mathematical reasoning (BeyondAIME), competitive programming (Codeforces), and scientific reasoning (GPQA). Our results demonstrate significant improvements over static training approaches, with 23.1% reduction in training time, 18.5% improvement on BeyondAIME, and 19.7% enhancement in generalization to unseen reasoning tasks.
+We evaluate AdaptDifficulty across diverse reasoning benchmarks including mathematical reasoning (BeyondAIME), competitive programming (Codeforces), and scientific reasoning (GPQA). Our results demonstrate significant improvements over static training approaches, with 23.1\% reduction in training time, 18.5\% improvement on BeyondAIME, and 19.7\% enhancement in generalization to unseen reasoning tasks.
 
 The implications of our work extend beyond performance improvements. By making training more efficient, AdaptDifficulty reduces the computational resources required to develop reasoning capabilities in LLMs. Furthermore, our automatic problem generation system produces educational content with precise difficulty calibration, potentially benefiting human learners in STEM domains.
 

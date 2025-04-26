@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate visualization for learning efficiency comparison
-between AdaptDifficulty and baseline approaches for the Zhijianglab paper.
+between AdaptDifficulty and baseline approaches for the Zhejianglab paper.
 """
 
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ plt.rcParams.update({
     'xtick.labelsize': 11,
     'ytick.labelsize': 10,
     'legend.fontsize': 10,
-    'figure.figsize': (8, 5),
+    'figure.figsize': (8, 6),
     'lines.linewidth': 1.5,
     'patch.linewidth': 1,
     'legend.frameon': True,
@@ -50,20 +50,29 @@ static_distribution_perf = static_distribution_curve(training_steps)
 manual_curriculum_perf = manual_curriculum_curve(training_steps)
 difficulty_based_perf = difficulty_based_curve(training_steps)
 
-# Create the figure with clean professional style
-fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
+# Create the figure
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
-# Set clean black frame around the plot
-for spine in ax.spines.values():
-    spine.set_visible(True)
-    spine.set_color('black')
-    spine.set_linewidth(1.0)
+# Create step values with fewer points for cleaner marker appearance
+marker_steps = np.linspace(0, 500, 10)  # 10 points for markers
 
-# Plot learning curves with consistent styles matching generalization figure
-ax.plot(training_steps, adapt_difficulty_perf, linewidth=2, label='AdaptDifficulty', color='black', linestyle=(0, (3, 1)))
-ax.plot(training_steps, static_distribution_perf, linewidth=2, label='Static Distribution', color='#ff9999', linestyle='-')
-ax.plot(training_steps, manual_curriculum_perf, linewidth=2, label='Manual Curriculum', color='#bbbbbb', linestyle='-')
-ax.plot(training_steps, difficulty_based_perf, linewidth=2, label='Difficulty-Based', color='#99cc99', linestyle='-')
+# Calculate performance values at marker points
+adapt_difficulty_markers = adapt_difficulty_curve(marker_steps)
+static_distribution_markers = static_distribution_curve(marker_steps)
+manual_curriculum_markers = manual_curriculum_curve(marker_steps)
+difficulty_based_markers = difficulty_based_curve(marker_steps)
+
+# Plot learning curves with consistent colors and markers
+line1 = ax.plot(training_steps, adapt_difficulty_perf, linewidth=2, label='AdaptDifficulty', color='black', linestyle='-')
+line2 = ax.plot(training_steps, static_distribution_perf, linewidth=2, label='Static Distribution', color='#ff9999', linestyle='-')
+line3 = ax.plot(training_steps, manual_curriculum_perf, linewidth=2, label='Manual Curriculum', color='#bbbbbb', linestyle='-')
+line4 = ax.plot(training_steps, difficulty_based_perf, linewidth=2, label='Difficulty-Based', color='#99cc99', linestyle='-')
+
+# Add markers to highlight data points
+ax.plot(marker_steps, adapt_difficulty_markers, 'o', color='black', markerfacecolor='white', markeredgecolor='black', markersize=6)
+ax.plot(marker_steps, static_distribution_markers, 's', color='#ff9999', markerfacecolor='white', markeredgecolor='#ff9999', markersize=6)
+ax.plot(marker_steps, manual_curriculum_markers, '^', color='#bbbbbb', markerfacecolor='white', markeredgecolor='#bbbbbb', markersize=6)
+ax.plot(marker_steps, difficulty_based_markers, 'D', color='#99cc99', markerfacecolor='white', markeredgecolor='#99cc99', markersize=6)
 
 # Find the crossing point where AdaptDifficulty reaches what Static Distribution does at max
 static_max = static_distribution_perf[-1]
@@ -74,7 +83,24 @@ crossing_x = training_steps[crossing_idx]
 ax.axhline(y=static_max, color='black', linestyle=':', alpha=0.5, linewidth=0.8)
 ax.axvline(x=crossing_x, color='black', linestyle=':', alpha=0.5, linewidth=0.8)
 
-# Add annotation for the efficiency gain - professional and concise
+# Set axis labels and limits
+ax.set_xlabel('Training Steps (thousands)')
+ax.set_ylabel('Performance (%)')
+ax.set_xlim(0, 500)
+ax.set_ylim(0, 100)
+
+# Add black frame around the plot
+for spine in ax.spines.values():
+    spine.set_visible(True)
+    spine.set_color('black')
+    spine.set_linewidth(1.0)
+
+# Configure axis ticks and grid with consistent styling
+ax.xaxis.set_major_locator(MultipleLocator(100))
+ax.yaxis.set_major_locator(MultipleLocator(20))
+ax.yaxis.grid(True, linestyle='-', alpha=0.2)
+
+# Add annotation for the efficiency gain with same styling as other figures
 efficiency_text = "Equivalent performance\nat ~42K steps\n(57% reduction)"
 ax.annotate(efficiency_text,
             xy=(crossing_x, static_max), xycoords='data',
@@ -82,28 +108,15 @@ ax.annotate(efficiency_text,
             arrowprops=dict(facecolor='black', shrink=0.05, width=1, headwidth=5),
             fontsize=8, color='black')
 
-# Customize the axes with clean professional style
-ax.set_xlabel('Training Steps (thousands)')
-ax.set_ylabel('Performance (%)')
-
-# Set clean axis limits and ticks
-ax.set_xlim(0, 500)
-ax.set_ylim(0, 100)
-ax.xaxis.set_major_locator(MultipleLocator(100))
-ax.yaxis.set_major_locator(MultipleLocator(20))
-
-# Add subtle grid on y-axis only
-ax.yaxis.grid(True, linestyle='-', alpha=0.2)
-
-# Create clean legend
-ax.legend(ncol=4, loc='upper center', bbox_to_anchor=(0.5, -0.09), frameon=False, handlelength=2.5)
+# Add legend below the chart, similar to example
+ax.legend(ncol=4, loc='upper center', bbox_to_anchor=(0.5, -0.08), frameon=False, handlelength=2.5)
 
 # Title below the figure like in the example
 fig.text(0.5, 0.01, 'Figure 2: Training efficiency comparison between different approaches.', 
          ha='center', va='bottom', fontsize=11)
 
 # Tight layout with space for the title
-plt.tight_layout(rect=[0, 0.05, 1, 1])
+plt.tight_layout(rect=[0, 0.07, 1, 1])
 
 # Save the figure
 plt.savefig('output/learning_efficiency.png', dpi=300, bbox_inches='tight')
