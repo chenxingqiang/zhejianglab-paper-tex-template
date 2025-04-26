@@ -1,0 +1,106 @@
+\documentclass[]{bytedance_seed}
+\usepackage{tabularx}
+% single-column: \documentclass[]{bytedance_seed}, 
+%Please prioritize using single-column。
+
+% twocolumn: \documentclass[twocolumn]{bytedance_seed}
+
+\usepackage[toc,page,header]{appendix}
+
+% Fix header height warning
+\setlength{\headheight}{64pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{minitoc}
+\usepackage{cleveref} 
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{xcolor}
+\usepackage{CJKutf8}
+\usetikzlibrary{patterns}
+\usepackage{float}
+\usepackage{caption}
+
+% Fix font issues for small sizes
+\usepackage{fix-cm}
+\newcommand{\method}{AdaptDifficulty\xspace}
+
+\input{macro}
+
+\renewcommand{\thefootnote}{}
+
+
+%%%%%%%%%%%%%%%%%%%%
+
+\title{AdaptDifficulty: Enhancing Reasoning Capabilities in Large Language Models through Adaptive Training}
+
+% 
+
+% \author[1,2,*, \dagger]{Author1}
+% \author[1]{Author2}
+% \author[1,2,*]{Author3}
+% \author[1]{Author4}
+% \author[1, \dagger]{Author5}
+
+%论文单位请使用ByteDance Seed
+
+\affiliation{Zhijiang Lab, Hangzhou, China}
+
+
+
+\contribution{Chen Xingqiang}
+% \contribution[*]{Work done at ByteDance Seed}
+% \contribution[\dagger]{Corresponding authors}
+
+\abstract{
+\input{sections/000abstract}
+}
+
+
+% March 17, 2025
+% \today
+
+%\date{March 28, 2025}
+
+
+% You can add additional info fields as follows 
+%\checkdata[Project Page]{\url{https://dapo-sia.github.io/}}
+
+\begin{document}
+
+\maketitle
+
+%不需要目录就注释掉 注意目录不要和第一页放在一块 要有\newpage
+%\newpage
+%\tableofcontents
+%\newpage
+
+
+
+\input{sections/010intro}
+%\input{sections/020preliminary}
+\input{sections/030data}
+\input{sections/040rm}
+\input{sections/050rl}
+\input{sections/070Infra}
+\input{sections/060Experiments}
+% \input{sections/050discussion}
+\input{sections/060related}
+\input{sections/100conclusion}
+\input{sections/130contributions}
+
+\clearpage
+
+\bibliographystyle{unsrt}
+% \bibliographystyle{plainnat}
+\bibliography{main,adaptive_refs}
+
+\clearpage
+\beginappendix
+\input{sections/appendix}
+
+\end{document}

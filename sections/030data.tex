@@ -1,0 +1,205 @@
+\section{Difficulty Assessment Framework}
+\subsection{Measuring Problem Difficulty}
+
+A fundamental component of our adaptive difficulty training framework is the ability to accurately assess and categorize the difficulty of reasoning problems. Without precise difficulty measurements, dynamically adjusting training data would be impossible. We develop a multi-dimensional difficulty assessment approach that combines structural complexity analysis, solution path characteristics, empirical performance data, and domain-specific features. This comprehensive framework enables us to estimate difficulty for both existing problems and newly generated ones with high accuracy.
+
+\subsection{Structural Complexity Analysis}
+
+The first dimension of our difficulty assessment framework is structural complexity analysis, which examines the inherent properties of a problem independent of any solution method. This approach draws from computational complexity theory and cognitive science to quantify the intrinsic difficulty of reasoning problems.
+
+\subsubsection{Mathematical Reasoning Complexity Metrics}
+
+For mathematical reasoning problems, we develop a set of quantitative metrics that correlate strongly with human judgments of difficulty and model performance:
+
+\textbf{Concept Density and Diversity:} We analyze the number and diversity of mathematical concepts required to solve a problem. Using a knowledge graph of mathematical concepts with 1,248 nodes and 5,316 edges spanning algebra, geometry, calculus, and number theory, we compute:
+
+\begin{itemize}
+    \item \textbf{Concept Count ($C_c$):} The number of distinct mathematical concepts required
+    \item \textbf{Concept Diversity ($C_d$):} The spread of concepts across different mathematical domains
+    \item \textbf{Concept Relatedness ($C_r$):} The average graph distance between concepts in the knowledge graph
+\end{itemize}
+
+Problems requiring many distantly related concepts are assigned higher difficulty scores.
+
+\textbf{Step Count and Dependency:} We estimate the minimum number of discrete reasoning steps required to solve a problem and analyze their interdependencies:
+
+\begin{itemize}
+    \item \textbf{Minimum Step Count ($S_c$):} The smallest number of reasoning steps in a valid solution
+    \item \textbf{Step Dependency Depth ($S_d$):} The maximum depth of the dependency graph of reasoning steps
+    \item \textbf{Working Memory Load ($W_m$):} The maximum number of intermediate results that must be held in memory simultaneously
+\end{itemize}
+
+\textbf{Solution Space Characteristics:} We evaluate the breadth and depth of the solution search space:
+
+\begin{itemize}
+    \item \textbf{Branching Factor ($B_f$):} The average number of valid next steps at each decision point
+    \item \textbf{Solution Path Count ($P_c$):} Estimated number of distinct valid solution paths
+    \item \textbf{Path Efficiency Variance ($P_v$):} Variance in solution efficiency across different valid approaches
+\end{itemize}
+
+We combine these metrics into a composite difficulty score using a weighted function $D(p) = \alpha_1 C(p) + \alpha_2 S(p) + \alpha_3 P(p)$ where $C$, $S$, and $P$ represent the concept, step, and path complexity components, respectively. The weights ($\alpha_i$) are calibrated using human expert ratings on a subset of 2,500 problems annotated with difficulty scores on a 1-10 scale.
+
+\subsubsection{Programming Complexity Metrics}
+
+For programming and algorithmic reasoning tasks, we develop specialized metrics that capture both the algorithmic complexity and implementation challenges:
+
+\textbf{Algorithm Complexity Factors:}
+\begin{itemize}
+    \item \textbf{Time Complexity Requirement ($T_c$):} The minimum asymptotic time complexity of a valid solution
+    \item \textbf{Space Complexity Requirement ($S_c$):} The minimum asymptotic space complexity of a valid solution
+    \item \textbf{Algorithm Class Identification ($A_i$):} The classes of algorithms potentially required (e.g., dynamic programming, graph algorithms, string algorithms)
+    \item \textbf{Data Structure Sophistication ($D_s$):} Complexity of data structures needed for optimal solutions
+\end{itemize}
+
+\textbf{Problem Constraints Analysis:}
+\begin{itemize}
+    \item \textbf{Input Size Constraints ($I_s$):} Maximum size of input parameters that solutions must handle efficiently
+    \item \textbf{Edge Case Density ($E_c$):} Number and subtlety of edge cases that must be handled
+    \item \textbf{Constraint Tightness ($C_t$):} How close the constraints are to forcing specific implementation approaches
+\end{itemize}
+
+\textbf{Implementation Complexity:}
+\begin{itemize}
+    \item \textbf{Code Length Estimate ($L_e$):} Estimated minimum lines of code for a correct solution
+    \item \textbf{Logic Branch Complexity ($B_c$):} Number of conditional branches and logical paths in a typical solution
+    \item \textbf{Implementation Precision ($P_i$):} Required precision in implementation details (e.g., off-by-one error sensitivity)
+\end{itemize}
+
+These metrics are calculated using a combination of static analysis of problem statements, constraints, and test cases, along with empirical data from human solutions. We validate our metrics against a dataset of 2,800 competitive programming problems from platforms like Codeforces, AtCoder, and Leetcode, with existing difficulty ratings and historical solve rates.
+
+\subsection{Empirical Difficulty Calibration}
+
+Beyond theoretical complexity metrics, we develop an empirical calibration system that refines difficulty estimates using historical model and human performance data. This approach provides a critical reality check on our theoretical metrics and captures nuanced aspects of difficulty that may not be evident from structural analysis alone.
+
+\subsubsection{Performance-Based Difficulty Estimation}
+
+We collect performance data from multiple models at different capability levels on a shared set of reasoning problems to establish empirical difficulty estimates:
+
+\begin{itemize}
+    \item \textbf{Multi-Model Performance Profiles:} We evaluate each problem using 5 different model variants with increasing capabilities, from smaller general models to state-of-the-art reasoning specialists
+    \item \textbf{Solve Rate Analysis:} For each problem, we compute the solve rate across models and identify the capability threshold at which models begin to solve it reliably
+    \item \textbf{Response Consistency:} We measure variance in model outputs for the same problem, with higher variance indicating greater difficulty
+    \item \textbf{Human-Model Correlation:} We analyze the correlation between human and model performance on a subset of 3,500 problems with human performance data
+\end{itemize}
+
+These empirical metrics are combined into an Empirical Difficulty Index (EDI) that supplements our theoretical metrics. We find that certain problems defy their theoretical difficulty classification—appearing simple in structure but empirically proving challenging, or conversely, having complex structure but being readily solvable. These "difficulty anomalies" provide valuable insights into reasoning processes.
+
+\subsubsection{Model-Based Difficulty Validation}
+
+To validate our difficulty assessment framework, we implement a specialized difficulty estimation model (DEM) that predicts difficulty scores given a problem statement. The DEM is trained on 25,000 problems with human-annotated difficulty ratings and fine-tuned using model performance data.
+
+The DEM achieves a Pearson correlation of 0.83 with human difficulty ratings and 0.78 with empirical model performance on our validation set. This model serves three key functions:
+
+\begin{itemize}
+    \item \textbf{Rapid Difficulty Screening:} Quickly estimates difficulty for new problems without requiring full solution analysis
+    \item \textbf{Difficulty Component Analysis:} Identifies which specific aspects of a problem contribute most to its difficulty
+    \item \textbf{Difficulty Adjustment Guidance:} Suggests modifications to problems to target specific difficulty levels
+\end{itemize}
+
+This model-based approach enables efficient processing of large problem sets and supports our adaptive difficulty training pipeline by providing immediate difficulty feedback on newly generated problems.
+
+
+% For competitive programming tasks, the most accurate form of evaluation is submitting the generated code to the official Codeforces platform and retrieving the official verification results. However, it is not possible to submit the generation to platform during RL training. To evaluate the model performance in the training process, we construct an offline evaluation set that enables efficient local validation. This set is integrated with a local code sandbox, allowing model-generated code to be executed and judged without online submission. Empirically, we observe that the offline evaluation results show a high agreement with the official Codeforces verdicts, making it a reliable proxy during training and ablation studies.
+
+
+% For automatic verification, we integrate these problems into an in-house code sandbox environment, allowing model-generated code to be executed and evaluated directly. We maintain the sandbox's stability and high throughput to provide consistent and accurate feedback signals during the reinforcement learning training process.
+
+
+% To facilitate , we integrate these problems into an in-house code sandbox environment. This allows model-generated code to be executed and verified directly, enabling a precise and scalable judgment of correctness without human intervention. This setup is essential for large-scale benchmarking of code generation models.
+
+\section{Automatic Problem Generation}
+
+A critical innovation in our adaptive difficulty framework is the ability to generate new reasoning problems with precisely controlled difficulty parameters. This capability addresses a fundamental limitation in traditional reasoning model training: the finite supply of high-quality problems with verified difficulty levels. Our problem generation system enables the creation of an effectively unlimited supply of novel reasoning challenges calibrated to specific difficulty targets.
+
+\subsection{Generative Approach Architecture}
+
+Our problem generation system combines template-based approaches with generative AI techniques to create diverse, well-formed problems with guaranteed solutions:
+
+\begin{itemize}
+    \item \textbf{Template-Based Generation:} We develop structured templates for different problem types (e.g., algebraic word problems, geometric proofs, algorithm design challenges) with parameterized difficulty controls
+    \item \textbf{Neural Generation:} Fine-tuned generative models create natural language variations and novel scenarios while preserving the underlying reasoning structure
+    \item \textbf{Hybrid Verification:} Symbolic solvers combined with model-based verification ensure all generated problems have unique, valid solutions
+\end{itemize}
+
+The system incorporates the difficulty metrics established in our assessment framework to generate problems targeting specific difficulty levels. By controlling parameters such as concept count, step dependency depth, and solution path characteristics, we can create problems with predictable difficulty profiles.
+
+\subsection{Domain-Specific Generation}
+
+\subsubsection{Mathematical Reasoning Problems}
+
+For mathematical reasoning problems, our generator manipulates the following aspects to control difficulty:
+
+\begin{itemize}
+    \item \textbf{Concept Mixing:} Combines concepts from different domains (e.g., geometry and number theory) with controlled graph distance in our concept knowledge base
+    \item \textbf{Step Chain Length:} Controls the number of sequential reasoning steps required
+    \item \textbf{Distracting Information:} Introduces irrelevant details that must be filtered out during reasoning
+    \item \textbf{Solution Path Diversity:} Controls whether problems have unique or multiple valid solution approaches
+\end{itemize}
+
+\subsubsection{Programming Challenges}
+
+For programming tasks, the generator controls difficulty through:
+
+\begin{itemize}
+    \item \textbf{Algorithm Complexity Requirements:} Sets minimum time/space complexity constraints that force specific algorithmic approaches
+    \item \textbf{Edge Case Density:} Controls the number and subtlety of edge cases that must be handled
+    \item \textbf{Constraint Optimization:} Sets input constraints that require specific optimizations
+    \item \textbf{Problem Framing:} Controls how directly the algorithmic challenge is presented versus requiring extraction from a narrative context
+\end{itemize}
+
+\subsection{Quality Control and Validation}
+
+Each generated problem undergoes a rigorous validation process:
+
+\begin{itemize}
+    \item \textbf{Solution Verification:} Ensures exactly one correct answer exists and can be derived through valid reasoning
+    \item \textbf{Difficulty Validation:} Uses our difficulty estimation model to verify the problem meets target difficulty parameters
+    \item \textbf{Originality Check:} Ensures the problem is sufficiently distinct from existing training examples
+    \item \textbf{Human Evaluation:} A subset of generated problems undergoes expert review to validate quality, clarity, and educational value
+\end{itemize}
+
+Our system achieves a 92.3\% acceptance rate in human expert evaluations of problem quality and appropriate difficulty classification, demonstrating its effectiveness in generating high-quality reasoning challenges.
+
+
+% The logic data has the following key characteristics:
+
+% First, \textbf{programmatically verifiable accuracy}: all logic reasonings are paired with automated verification scripts that rigorously check the correctness of solutions. This eliminates the need for manual labeling or subjective judgment, ensuring objective and consistent evaluation. These verifiers can also be seamlessly integrated into reinforcement learning (RL) pipelines as reward functions or correctness checkers.
+
+% Second, \textbf{automatically generable training and testing data}: each puzzle task supports on-demand generation of datasets for both training and evaluation. This significantly reduces the manual effort required for data preparation and enables the creation of diverse problem instances, improving the generalizability of models trained on them.
+
+% Third, \textbf{controllable difficulty levels}: many of the logic reasonings include configurable difficulty settings, allowing users to adjust task complexity based on specific evaluation needs. This flexibility facilitates deeper analysis of algorithmic performance under varying levels of challenge, helping researchers identify strengths and limitations of different approaches.
+
+\subsubsection{Non-verifiable Problems}
+Non-verifiable problems mainly encompass non-reasoning tasks requiring quality assessment based on human preferences, involving tasks like creative writing, translation, knowledge QA, role-playing, and so on. The prompts are originated from RL training data for Doubao-1.5 Pro \citep{doubao1.5pro}. The dataset has sufficient coverage across diverse domains. 
+
+We discard data with low sample score variance and low difficulty. To be specific, we use the SFT model to generate multiple candidates for each prompt and then score them using a reward model. Prompts with low score variances are removed as they exhibit limited sampling diversity and minimal potential for improvement. Prompts are also removed where the reward score improvement surpasses a certain threshold during the Doubao 1.5 Pro RL training process \cite{shen2025exploringdatascalingtrends}. This is because such data may be overly simplistic or already abundantly represented in the dataset. Offline experiments show that overoptimizing such samples leads to premature collapse of the model's exploration space and diminish the performance.
+
+For these non-verifiable data, we employ a pairwise rewarding method for scoring and RL training. By comparing the relative quality of two samples, this approach aids the model in better understanding user preferences, enhancing the quality and diversity of generated results. The detail of the reward model is introduced in \ref{sec: sub_reward_model}.
+
+
+% Subjective problems primarily encompass non-reasoning tasks requiring quality assessment based on human preferences, involving tasks lacking definitive answers or precise validation through automated verifiers. These tasks include translation, summarization, creation, humanitiexs knowledge, role-playing, instruction following, text classification, and word games. Notably, while humanities knowledge task may possess predefined answers, it is categorized as subjective task because it requires model to provide appropriate explanation and elaboration rather than merely delivering a standalone answer.
+
+
+% We employ a comprehensive suite of data pre-processing and filtering techniques to guarantee that the subjective data we utilize possess two crucial characteristics. First, this data achieves sufficient coverage across diverse domains. By doing so, we expose our model to a wide range of scenarios and contexts, enabling it to develop a more generalized understanding. Second, we ensure that the data is of an appropriate difficulty level for our model. This careful calibration prevents the model from being overwhelmed by overly complex data or stunted by data that is too simplistic.
+
+% too much details
+
+% \textbf{Sample variance based data filtering} aims to identify samples with discriminative characteristics through multiple samplings. Specifically, for each prompt in the dataset, we utilize SFT model to generate 5 responses and use a reward model to compute their scores, which are used for sample variance calculation. Prompts with low sample variances are filtered out, as they exhibit limited sampling diversity and minimal potential for improvement during RL training.
+
+% \textbf{Offline sampling of reference responses} is employed to generate a high-quality reference response for each prompt offline. It is necessary because we adopt the pairwise RL training framework mentioned in \cite{qrl}. Within this framework, online-generated responses are compared against the reference responses during RL training to derive rewards. Specifically, reference responses are obtained via offline best-of-15 sampling using the SFT model.
+
+% \textbf{Difficulty filtering using pre-RL phase} is implemented to elevate the difficulty of the dataset. Specifically, the pre-RL phase refer to a preliminary RL training stage over the entire dataset for one epoch. Following this stage, we compute the reward improvement for each individual prompt. Samples exhibiting excessively large reward increments are filtered out, as these are identified as easy samples. Experimental results demonstrate that over-optimizing such samples leads to premature collapse of the model's exploration space, consequently diminishing the optimization ceiling.
+
+% \subsection{Benchmark}
+
+\subsection{Advanced Math Benchmark}
+The current reasoning models usually use AIME as the go-to benchmark to evaluate mathematical reasoning abilities. However, with only 30 problems released annually, its limited size can lead to high-variance evaluation results, making it challenging to effectively differentiate between state-of-the-art reasoning models. To better evaluate models’ capabilities in mathematical reasoning, we construct a new benchmark dataset: \textbf{BeyondAIME}. Specifically, we collaborate with mathematics specialists to develop original problems informed by established competition formats. We systematically adapt existing competition questions through structural modifications and scenario reconfigurations, ensuring no direct duplication occurs. Furthermore, we ensure that the answers are never trivial values—such as numbers explicitly mentioned in the problem statement—to reduce the chance of models guessing the correct answer without proper reasoning.
+
+Through this rigorous filtering and curation process, we compile a final set of 100 problems, each with a difficulty level equal to or greater than that of the hardest questions in AIME. Similar to AIME, all answers are guaranteed to be integers (without being restricted to a specific numerical range), which simplifies and stabilizes the evaluation process.
+
+
+% \subsection{Competitive Coding Evaluation}
+
+% For competitive programming tasks, the most accurate form of evaluation is submitting generated code to the official Codeforces platform and retrieving the official verification results. However, it is non-trival to submit generation to platform during RL training. To evaluate the model performance in the training process, we construct an offline evaluation set that enables efficient local validation. This set is integrated with a local code sandbox, allowing model-generated code to be executed and judged without online submission. Empirically, we observe that the offline evaluation results show a high agreement with the official Codeforces verdicts, making it a reliable proxy during training and ablation studies.
+
+%\subsection{Verifier}

@@ -1,0 +1,121 @@
+
+\section{Reward Modeling}
+
+As a crucial component in RL, reward modeling defines the objective or goal that the policy is trying to achieve. Thus, a well-designed reward mechanism is essential to provide precise and reliable reward signals for model responses during the training stage. For verifiable and non-verifiable problems, we employ distinct reward modeling methodologies.
+
+\section{Adaptive Sampling Algorithm}
+\label{sec:adaptive_sampling}
+
+A cornerstone of our adaptive difficulty training framework is the dynamic sampling algorithm that selects training examples based on the model's evolving capabilities. Unlike static training approaches that use fixed sampling distributions, our method continuously adjusts the probability of sampling problems based on their current educational value to the model.
+
+\subsection{Learning Value Estimation}
+
+The foundation of our adaptive sampling approach is the estimation of each problem's current learning value for the model—its potential to improve the model's reasoning capabilities.
+
+\begin{itemize}
+    \item \textbf{Performance Gap Assessment:} We measure the difference between the model's current performance on a problem and optimal performance
+    \item \textbf{Learning Gradient:} We track the rate of improvement on similar problems over recent training iterations
+    \item \textbf{Difficulty-Performance Alignment:} We identify the range of problem difficulties where the model shows the steepest learning curve
+\end{itemize}
+
+Formally, we define the learning value $L(p, M_t)$ of a problem $p$ for model $M$ at training iteration $t$ as:
+
+$$L(p, M_t) = \alpha \cdot (1 - P(p, M_t)) \cdot D_p \cdot G(p, M_t)$$
+
+Where $P(p, M_t)$ is the performance of model $M_t$ on problem $p$ (ranging from 0 to 1), $D_p$ is the normalized difficulty score of problem $p$, and $G(p, M_t)$ is the learning gradient—the rate of recent improvement on problems similar to $p$. The parameter $\alpha$ controls the scaling of the learning value.
+
+\subsection{Dynamic Probability Distribution}
+
+Based on the estimated learning values, we define a probability distribution over the problem pool for sampling training examples:
+
+$$P(\text{sample } p_i | M_t) = \frac{L(p_i, M_t)^\beta}{\sum_{j=1}^{N} L(p_j, M_t)^\beta}$$
+
+Where $N$ is the total number of problems in the pool, and $\beta$ is a temperature parameter that controls the sharpness of the distribution. Higher values of $\beta$ concentrate sampling on high learning value problems, while lower values promote more exploration.
+
+\subsection{Exploration-Exploitation Balance}
+
+A critical challenge in adaptive sampling is balancing exploitation (focusing on problems in the optimal learning zone) with exploration (trying problems of varying difficulties to discover new learning opportunities):
+
+\begin{itemize}
+    \item \textbf{Distribution Mixture:} We combine the learning value-based distribution with a uniform distribution over difficulty levels
+    \item \textbf{Dynamic Exploration Rate:} The exploration rate $\epsilon$ is adjusted based on learning progress stability
+    \item \textbf{Difficulty Stratification:} We ensure minimum sampling rates across difficulty strata to prevent catastrophic forgetting
+\end{itemize}
+
+Our final sampling distribution is:
+
+$$P(\text{sample } p_i | M_t) = (1 - \epsilon_t) \cdot \frac{L(p_i, M_t)^\beta}{\sum_{j=1}^{N} L(p_j, M_t)^\beta} + \epsilon_t \cdot U(p_i)$$
+
+Where $U(p_i)$ is a stratified uniform distribution ensuring coverage across difficulty levels, and $\epsilon_t$ is the exploration rate at iteration $t$.
+
+\subsection{Curriculum Optimization}
+
+Beyond individual problem sampling, we optimize the overall curriculum structure to promote efficient learning:
+
+\begin{itemize}
+    \item \textbf{Difficulty Progression:} We gradually shift the sampling distribution toward higher difficulty levels as competence increases
+    \item \textbf{Skill Gap Targeting:} We increase sampling probability for problems that exercise identified weaknesses
+    \item \textbf{Domain Balancing:} We maintain representation across reasoning domains to promote skill transfer
+\end{itemize}
+
+We implement this using a curriculum scheduler that modulates the base sampling distribution by applying domain-specific weighting factors based on performance metrics and training objectives.
+
+\subsection{Online Adaptation Mechanism}
+
+The adaptive sampling system continuously updates based on model performance:
+
+\begin{itemize}
+    \item \textbf{Real-time Performance Tracking:} Performance metrics are updated after each training batch
+    \item \textbf{Periodic Distribution Updates:} The sampling distribution is recalculated every $k$ training steps
+    \item \textbf{Progress-Based Adjustments:} Hyperparameters such as $\beta$ and $\epsilon$ are adjusted based on learning progress
+\end{itemize}
+
+This online adaptation ensures that the sampling distribution remains optimally aligned with the model's evolving capabilities throughout the training process.
+
+\subsection{Reward Modeling for Verifiable Problems}
+\label{sec: obj_reward_model}
+
+
+With proper principles and thought trajectories, we utilize LLMs to judge a wide array of verifiable questions across diverse scenarios. This approach yields a more generalized solution that surpasses the limitations of rule-based reward systems.
+
+We have designed two progressive reward modeling solutions, \textbf{Seed-Verifier} and \textbf{Seed-Thinking-Verifier}:
+\begin{itemize}
+    \item \textbf{Seed-Verifier} is based on a set of meticulously crafted principles written by humans. It leverages the powerful foundational capabilities of LLMs to evaluate a triplet consisting of the question, reference answer, and model-generated answer. If the reference answer and model-generated answer are essentially equivalent, it returns ``YES''; otherwise, it returns ``NO''. The equivalence here is not a literal exact match but rather a deeper assessment based on computational rules and mathematical principles that prove the two answers convey the same mathematical meaning. This approach ensures that the reward signal accurately reflects whether the model's response is correct in essence, even if the wording differs.
+    \item \textbf{Seed-Thinking-Verifier} is inspired by the human judgment process, which generates conclusive judgments through meticulous thinking and in-depth analysis. To achieve this, we trained a verifier that provides a detailed reasoning path for its evaluations. Specifically, we treated this as a verifiable task and optimized it alongside other mathematical reasoning tasks. This verifier can dissect the similarities and differences between the reference and model-generated answers, offering precise and nuanced judgment results.
+\end{itemize}
+
+The Seed-Thinking-Verifier significantly alleviates three major issues associated with the Seed-Verifier:
+\begin{itemize}
+    \item Reward Hacking: Non-thinking models may exploit loopholes to receive rewards without truly understanding the problem. The detailed reasoning process in Seed-Thinking-Verifier makes such hacking more difficult.
+    \item Uncertainty in Predictions: In cases where the reference and model-generated answers are essentially equivalent, which may differ in format, e.g., $2^{19}$ vs 524288, the Seed-Verifier might sometimes return ``YES'' and other times ``NO''. The Seed-Thinking-Verifier provides consistent results by thoroughly analyzing the reasoning behind the answers.
+    \item Failure on Corner Cases: There are certain edge cases that the Seed-Verifier struggles to handle effectively. The ability of Seed-Thinking-Verifier to provide detailed reasoning allows it to better address these complex scenarios.
+\end{itemize}
+
+\begin{table}
+\centering
+\begin{tabular}{p{3.7cm}|>{\centering\arraybackslash}p{5.5cm}|>{\centering\arraybackslash}p{5cm}}
+\toprule
+\textbf{Verifier-type} & \textbf{Training examples (approximate)} & \textbf{Human labeled testset}\\
+\midrule
+{Seed-Verifier} & $>98\%$ & $82.7\%$\\
+%\midrule
+{Seed-Thinking-Verifier} & $>99\%$ & $99.3\%$\\
+\bottomrule
+\end{tabular}
+\caption{Accuracy of two verifier-types. Specifically, the accuracy on the training set is derived from the training statistics. Additionally, we manually annotated 456 samples to form the test set, which are specifically selected from cases that the Seed-Verifier can not handle stably.}
+\label{tbl:verfier-acc}
+\end{table}
+
+Table~\ref{tbl:verfier-acc} presents the performance of the above two verifiers. %More details on case study can be found in Appendix~\ref{appendix:verifier}. 
+The results indicate that the Seed-Verifier struggles to effectively handle some particular cases, whereas the Seed-Thinking-Verifier demonstrates a remarkable ability to provide accurate judgments. While the thinking process of the latter does consume a significant amount of GPU resources, we believe that the precise and robust reward results it generates are crucial for endowing the policy with strong reasoning capabilities.
+
+\subsection{Reward Modeling for Non-verifiable Problems}
+For non-verifiable problems, we train a reward model for RL training. The reward model training data is consistent with the human preference data utilized in Doubao 1.5 Pro \citep{doubao1.5pro}, primarily encompassing categories such as creative writing and summarization.
+
+To enhance the effectiveness of reward model, we adopt the pairwise generative reward model mentioned in \cite{qrl}, which evaluates the superiority of two responses and use the probability of ``YES'' or ``NO'' as the final reward score. This approach enables the model to directly compare differences between responses during scoring, thereby avoiding excessive focus on irrelevant details. Experimental results demonstrate that this reward modeling method improves the stability of RL training, particularly in the mixed training scenarios involving both non-verifiable and verifiable problems, by minimizing conflicts between the two different types of reward modeling paradigms. This improvement may be attributed to the pairwise generative reward model's inherent advantage in mitigating outlier score generation compared to conventional reward models, therefore avoiding significant discrepancies in score distributions with the verifier.
+
+
+\label{sec: sub_reward_model}
+
+
+%\subsection{VAPO}

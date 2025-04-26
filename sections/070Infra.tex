@@ -1,0 +1,53 @@
+\section{Infrastructures}
+% Seed-Thinking-v1.5 is an Mixture-of-Experts (MoE) architecture \cite{moe} that contains around 200B parameters in total with 20B active parameters.
+
+%\subsection{Compute Clusters}
+%Seed-Thinking-v1.5 is trained in a cluster with 1024 Nvidia H800 GPUs. Each node in the H800 cluster contains 8 GPUs connected via NVLink. Across different nodes, InfiniBand (IB) interconnects are utilized for data communications.
+
+\subsection{Framework}
+The training framework is built using HybridFlow \cite{sheng2024hybridflow} programming abstraction. The whole training workload runs on top of a Ray \cite{ray} cluster. The dataloader and RL algorithm is implemented in a single process Ray Actor (single controller). The model training and response generation (rollout) is implemented in a Ray Worker Group. The Ray Worker Group exposes a set of APIs (e.g., generate\_response/train\_batch, etc,.), which runs heavy training/generation workload via SPMD (single program, multiple data) inside the Worker Group. The single controller invokes various APIs exposed by the Ray Worker Group to construct the training flow. HybridFlow programming abstraction enables fast prototyping of RL algorithm ideas without bothering with complex distributed systems.
+
+Seed-Thinking-v1.5 is trained through hybrid engine architecture \cite{yao2023deepspeedchateasyfastaffordable}, where all the models are co-located. This prevents the idle time of the GPUs when switching between training and generation. During Long-CoT generation, we observe severe straggler phenomenon caused by the large difference of the response length between various prompts. This causes massive GPU idle time during generation. To mitigate the straggler of long-tail response generation, we propose SRS (Streaming Rollout System) - a resource-aware scheduling framework that strategically deploys standalone streaming-compute units to transform system constraints from \textit{memory-bound} to \textit{compute-bound}.
+
+\subsection{Streaming Rollout System}
+The SRS architecture introduces \textit{streaming rollout} to decouple model evolution from runtime execution, enabling dynamic adjustment of on/off-policy sample ratios through parametric $\alpha$:
+\begin{itemize}
+\item Define the completion ratio ($\alpha \in [0,1]$) as the proportion of samples generated on-policy using the latest model version
+\item Allocate the remaining non-complete segment (1- $\alpha $) to off-policy rollouts from versioned model snapshots, seamlessly integrated through asynchronous continuation of partial generations on the standalone resources.
+\end{itemize}
+
+In addition, we also implement dynamic precision scheduling during environment interaction phases, which deploys FP8 policy networks via post-training quantization with error-compensated range scaling. %, while reserving BF16 precision for value estimation subroutines. 
+To address token imbalance in MoE systems, we implement a three-tiered parallel architecture combining TP (tensor parallelism) for layer-wise computation, EP (expert parallelism) with dynamic expert assignment, and SP (sequence parallelism) for context chunking. Our kernel auto-tuner dynamically selects optimal CUDA kernel configurations based on real-time load monitoring.
+
+
+\subsection{Training System}
+% we have to mention the active parameters and full parameters to justify the design choice.
+% TP/EP + FSDP + Ulysses. report mfu/scalability. Optimizations: data parallel balancing, micro batch balancing. Advantage of not using pp (not restriction on the number of micro batches). Selective recomputing, activation offloading. Autotuner
+
+% 1. tp/ep + sp + fsdp - why not pp: changing token num, 
+To efficiently train the Seed-Thinking-v1.5 model at scale, we design a hybrid distributed training framework that integrates advanced parallelism strategies, dynamic workload balancing, and memory optimizations. Below we detail the core technical innovations driving the system’s efficiency and scalability.
+
+
+\begin{itemize}
+    \item \textbf{Parallelism mechanisms.} We compose TP (tensor parallelism)/EP (expert parallelism)/CP (context parallelism) with Fully Sharded Data Parallelism (FSDP) to train Seed-Thinking-v1.5. Specifically, we applied TP/CP for attention layers, and EP for MoE layers. 
+% Since the training depends on the output of rollout generation, where the sequence length can be diverse across different mini-batches, pipeline parallelism does not perform well as it may suffer from small number of micro-batches (i.e., high bubbles) or low kernel efficiency due to small sequence lengths. Instead, we leverage FSDP to get rid of these restrictions.
+% 2. micro-batch balancing
+    \item \textbf{Sequence length balancing.} The effective sequence length can be imbalanced across DP ranks, leading to imbalanced computation workload and low training efficiency. To address this challenge, we leverage KARP~\cite{karp} algorithm that rearranges the input sequences within one mini-batch to make them balance among micro-batches.
+% and then 2) increase SP size to further balance the total sequence lengths across devices.
+% 3. memory optimization - act offload, optimizer offload, recompute
+    \item \textbf{Memory optimization.} 
+% During training, FSDP may suffer communication overhead (i.e., all-gather communication that overlaps with forward computation) due to small input sequence length. To improve the efficiency, 
+We adopt layer-wise recomputation~\cite{recompute}, activation offload and optimizer offload to support training of larger micro-batches to overlap the communication overhead caused by FSDP. 
+% The activation offload is composed with recomputation by offloading the activations of each layer output tensors to CPU memory, and pre-fetches them back to GPU memory before the layer backward. The optimizer offload is achieved by offloading the optimizer states to CPU memory during model forward and backward, and fetching them into GPU memory when they are required to update the parameters.
+% 4. autotuner
+\item \textbf{Auto parallelism.} To enable optimal system performance, we develop an automatic tuning system, referred to as AutoTuner. 
+% It allows hiding all the engineering hyper-parameters from algorithm users. 
+Specifically, AutoTuner models the memory usage following a profile-based solution~\cite{alpa}. Then, it estimates the performance and memory usage of various configurations to obtain the optimal configuration.
+
+% To efficiently train the models across multiple GPU types and GPU numbers, we further developed an automatic tuning system, referred to as AutoTuner, that can hide all the engineering hyper-parameters from system users. Specifically, before the training starts, AutoTuner models the memory usage following a profile-based solution~\cite{alpa}. Then, it estimates the performance and memory usage starting from a empirical parallelism configuration. We obtain a key observation that the micro-batch size turns out to be a significant impact to system performance. Therefore, we guide the search towards to finding a largest micro-batch size by enabling all the memory optimizations that can save memory. The searched configuration is treated as a recipe and cached into a remote file system, where other tasks of the similar training workload can re-use it directly.
+% 5. byted-checkpoint - supports online resharding
+\item \textbf{Checkpoint.} We employ ByteCheckpoint \cite{wan2025bytecheckpointunifiedcheckpointinglarge} to support checkpoint resume from different distributed configurations with minimal overhead. This enables users to elastically train the tasks to improve cluster efficiency.
+\end{itemize}
+
+
+

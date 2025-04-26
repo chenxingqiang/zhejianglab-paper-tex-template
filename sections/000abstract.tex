@@ -1,0 +1,8 @@
+
+We introduce AdaptDifficulty, a novel adaptive difficulty training framework for large language models that dynamically calibrates the complexity of reasoning tasks based on a model's evolving capabilities. This approach addresses a fundamental challenge in training reasoning models: static datasets provide minimal learning signals once problems are mastered, while excessively difficult problems can impede progress through sparse gradients.
+
+Our framework consists of four key components: (1) a difficulty assessment system that quantifies reasoning problem complexity across domains, (2) a performance evaluation system for precise capability measurement, (3) an adaptive sampling algorithm that selects optimal training examples, and (4) an automatic problem generation system that creates well-formed problems with controlled difficulty parameters.
+
+Experiments demonstrate that AdaptDifficulty achieves significant improvements: a 23% reduction in training time to reach equivalent reasoning performance, 18% improvement on challenging benchmarks including BeyondAIME and advanced Codeforces problems, and enhanced generalization to unseen reasoning tasks. Our approach also demonstrates strong transfer learning capabilities, with models showing improved performance across adjacent reasoning domains not explicitly targeted during training.
+
+\date{April 26, 2025}

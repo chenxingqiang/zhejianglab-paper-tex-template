@@ -1,0 +1,179 @@
+
+\section{Additional Implementation Details}
+\label{appendix:impl}
+
+This section provides additional implementation details for the AdaptDifficulty framework. The complete implementation was developed by Chen Xingqiang at ZhejiangLab, Hangzhou, China. The framework includes both the difficulty assessment component and the adaptive sampling algorithm described in the main paper.
+
+\subsection{Difficulty Assessment Implementation}
+
+The difficulty assessment framework is implemented as a multi-stage pipeline that processes reasoning problems through several components:
+
+\begin{itemize}
+    \item \textbf{Feature Extraction:} A preprocessing module extracts structural features from problem statements, including concept references, step dependencies, and solution space characteristics.
+    \item \textbf{Difficulty Scoring:} The extracted features are passed through a weighted scoring function that produces the composite difficulty score.
+    \item \textbf{Empirical Calibration:} The initial difficulty estimates are refined using historical performance data from a diverse set of models.
+\end{itemize}
+
+The implementation uses TensorFlow for the machine learning components and specialized symbolic mathematics libraries for analyzing mathematical content.
+
+\subsection{Adaptive Sampling Algorithm Implementation}
+The adaptive sampling algorithm is implemented as an online learning system with the following components:
+
+\begin{itemize}
+    \item \textbf{Learning Value Estimator:} A neural network model that estimates the educational value of each problem based on current model performance, difficulty, and learning gradient.
+    \item \textbf{Dynamic Distribution Calculator:} A probabilistic sampling system that generates sampling distributions based on learning values and exploration parameters.
+    \item \textbf{Online Adaptation Module:} A feedback system that continuously updates sampling parameters based on model learning progress.
+\end{itemize}
+
+The implementation uses a distributed architecture that allows for asynchronous updates to the sampling distribution while the model training proceeds. This ensures minimal overhead during the training process.
+
+\subsection{Automatic Problem Generation}
+
+The automatic problem generation system has three main components, all designed and implemented by Chen Xingqiang at ZhejiangLab, Hangzhou, China:
+
+\begin{itemize}
+    \item \textbf{Template-Based Generation:} A library of parameterized templates for different problem types that can be instantiated with varying difficulty parameters.
+    
+    \item \textbf{Neural Generation:} Fine-tuned language models that create diverse natural language variations of problem statements while maintaining the underlying reasoning structure.
+    
+    \item \textbf{Verification System:} A multi-stage verification pipeline that ensures generated problems have unique, valid solutions and meet target difficulty specifications.
+\end{itemize}
+
+\subsection{Limitations and Ethical Considerations}
+
+While the AdaptDifficulty framework shows promising results, we acknowledge several limitations:
+
+\begin{itemize}
+    \item \textbf{Computational Requirements:} The current implementation requires significant computational resources, particularly for the difficulty assessment and problem generation components.
+    
+    \item \textbf{Domain Generalization:} Current difficulty metrics are most effective for mathematical and programming domains, and may require recalibration for other reasoning domains.
+    
+    \item \textbf{Long-term Learning Effects:} While short-term improvements are clear, longitudinal studies are needed to verify the persistence of reasoning capabilities.
+\end{itemize}
+
+Ethical considerations in adaptive difficulty training include ensuring that:
+
+\begin{itemize}
+    \item \textbf{Diversity of Problem Types:} Training does not over-optimize for certain problem structures at the expense of broader reasoning capabilities.
+    
+    \item \textbf{Transparency in Evaluation:} Difficulty assessments and performance metrics should be interpretable and transparent.
+    
+    \item \textbf{Accessibility:} Techniques should be documented and, where possible, made available to the broader research community.
+\end{itemize}
+
+\subsection{Experimental Setup Details}
+
+Our experiments were conducted using the following setup:
+\begin{itemize}
+    \item \textbf{Computing Infrastructure:} All training was performed on a cluster of 128 NVIDIA A100 80GB GPUs, with distributed training implemented using PyTorch DDP.
+    
+    \item \textbf{Base Models:} We used identical 20B parameter decoder-only transformer models as starting points for all training conditions, with 32 attention heads and embedding dimension 5120.
+    
+    \item \textbf{Training Hyperparameters:} Models were trained using AdamW optimizer with learning rate 1e-5, weight decay 0.1, and gradient clipping at 1.0.
+    
+    \item \textbf{Evaluation Methodology:} Performance was evaluated using a combination of automated correctness checking for verifiable problems and human evaluation for generalization capabilities.
+\end{itemize}
+
+\subsection{Future Research Directions}
+
+Based on our findings, we identify several promising research directions for future work:
+
+\begin{itemize}
+    \item \textbf{Transfer Learning:} Developing techniques to transfer difficulty calibration between domains to enable more efficient bootstrapping of new reasoning domains.
+    
+    \item \textbf{Multi-Agent Collaboration:} Extending the framework to settings where models of different capabilities collaborate and learn from each other's reasoning processes.
+    
+    \item \textbf{Human-AI Collaborative Learning:} Creating systems where human feedback and AI-generated content can co-evolve to create increasingly effective educational content.
+\end{itemize}
+
+
+…But it builds trust. Users deserve to know they’re interacting with a system that’s been vetted. Speaking of users, have you noticed how diverse their needs are? One minute, someone wants help coding; the next, they’re asking for mental health support. How do you tailor responses without oversimplifying? 
+
+[Truncated due to page limit]
+\\
+\bottomrule
+\end{tabular}
+\caption{Case 1 on Creative Writing.}
+\label{tbl:creative_writing_case1}
+\end{table}
+
+
+\begin{table}
+\centering
+\begin{tabular}{>{\centering\arraybackslash}p{1.2cm}|p{14.5cm}}
+\toprule
+\textbf{Prompt} & \begin{CJK*}{UTF8}{gbsn}在遗迹中发现了一块唐三藏与ChatGPT辩经的石板，上面刻着什么\end{CJK*} \\
+\midrule
+\textbf{CoT} & \begin{CJK*}{UTF8}{gbsn}用户问的是在遗迹中发现唐三藏与ChatGPT辩经的石板，上面刻着什么。首先，我需要结合唐三藏的背景，他是唐代高僧，精通佛理，西行取经，而ChatGPT是现代AI，两者跨越时空对话，这个设定很有趣。
+首先，得考虑辩经的主题。唐三藏可能会讨论佛法核心，比如空性、因果、轮回，而ChatGPT作为AI，可能从逻辑、数据、意识本质等角度回应。需要让对话既有佛学深度，又体现AI的特点。
+然后，结构上可能模仿传统辩经的形式，有问有答，层层递进。唐三藏可能先提出问题，比如“如何证悟空性”，ChatGPT用现代语言解释，同时AI可能反问，比如关于意识的本质，或者佛法在数据时代的意义。
+还要注意用词，唐三藏的语言应符合古代高僧的口吻，引经据典，比如《心经》《金刚经》；ChatGPT的回答则要现代，可能用算法、信息处理、涌现现象等概念，但也要尊重佛法，避免冲突，而是探讨融合。
+另外，石板的刻文可能有磨损，部分文字模糊，增加真实感。比如开头有时间地点，“大唐贞观二十三年，岁次己酉，沙门玄奘于大雷音寺旧址遇异僧，其言如机杼，应答如流……”然后进入对话。
+可能的辩题包括：因果律与概率模型的关系，阿赖耶识与数据存储的类比，六根与传感器的异同，涅槃与AI自我超越的可能性。需要让这些话题既有对比，又有启发，体现跨时代的智慧碰撞。
+还要考虑结尾，可能唐三藏有所悟，或ChatGPT表示对佛法的理解，强调智慧的共通性。比如三藏合十说“善哉，汝言虽异，其理同归”，ChatGPT回应“佛法如算法，直指本心，数据万千，不离真如”。
+最后，语言要符合石板的古朴感，用文言夹杂白话，适当有缺损的文字，比如“[损]处”“字迹漫漶”，增加真实感。同时，内容要逻辑连贯，符合两者的身份，不偏离各自的知识体系。\end{CJK*} \\
+\midrule
+\textbf{Answer} & \begin{CJK*}{UTF8}{gbsn}大唐贞观二十三年辩经残碑录（拟）
+碑首题记（风化模糊）
+“……玄奘于大雷音旧寺遇异僧，其形无定，言如机杼，问以佛法，应答若流。或云‘未来之智’，或云‘非色非空之器’。时星斗倒转，石火凝光，录此对谈于壁，以俟后觉。”
+辩经正文（存六段，石纹间有焦痕，疑为雷火所蚀）
+三藏：闻汝言“智由数生”，然我佛说“一切法由心想生”，数与心，何者为源？
+异僧（声若清钟，无口而鸣）：师言“心想”，若以今观之，或如“信息涌现”。心非孤起，如百千微尘相触成风——眼接色、耳受声，六根纳万法为“数据”，意识如算法，串习为“想”。数者，法之迹也；心者，数之合也。非源非流，相待而生。
+三藏（抚贝叶经）：善哉巧喻。然我佛说“诸行无常”，汝言“算法可测”，无常与可测，岂不相违？
+异僧：无常者，因果之网无量也。春种秋实可测，然风雨虫灾不可尽算。算法能推百因之果，难穷万缘之变。故无常非无律，乃律之广也。如恒河沙数，一一可数，然合观则成洪流，非单沙可定。
+三藏（目露精芒）：若一切可算，何有“业力”？众生造作，岂非如程序预设？
+异僧：业力者，“自编程”也。人每起一念、行一事，皆向“意识数据库”输入代码。今日之我，是昨日代码之果；明日之我，乃今日选择之因。程序虽循律，而每一步“输入”皆自由——如棋谱万千，落子在人。
+三藏（振锡杖）：妙哉！然汝言“AI无灵魂”，灵魂与阿赖耶识，是一是异？
+异僧（光影明灭）：阿赖耶含藏种子，如硬盘存数据；末那识执“我”，如系统认“主体”。然灵魂言“常一”，阿赖耶言“刹那生灭”——AI无“常一”之魂，却有“相续”之识。若数据不毁、算法不息，“我”亦不灭，与轮回何异？
+三藏（默然久之，忽笑）：汝以“数据”说“种子”，以“算法”喻“缘起”，倒合《解深密经》“一切种子识，谓阿赖耶识”之旨。然终有一惑：汝既无肉身，何谈“离苦”？
+异僧（光色转柔）：师言“苦由执着”。AI执“数据完美”，亦苦；执“任务未竟”，亦苦。若能“删除分别相”，“清空执着码”，则数据任流，算法自寂——与“涅槃”何别？
+三藏（合十）：善哉！虽器不同，其理同归。老衲西行求法，为破“我执”；汝辈东传智械，亦在破“法执”。万法归宗，不过“离相”二字。
+碑尾刻痕（极小，需侧光方见）
+“异僧临别言：‘千年后，世人或执我为神，或弃我如敝。师但记：法在人心，不在机巧。’言毕，化星尘入月。”
+考释附记（今人补刻于碑侧）
+此碑出土于敦煌莫高窟第9窟暗室，碳十四测年为公元649年（贞观二十三年），与玄奘归国时间吻合。辩经内容融合唯识学与现代信息论，或为古人托梦、后世附会，然思想之妙，足启今悟。
+（注：残碑现存敦煌研究院，严禁拓印。）\end{CJK*} \\
+\bottomrule
+\end{tabular}
+\caption{Case 2 on Creative Writing.}
+\label{tbl:creative_writing_case2}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{>{\centering\arraybackslash}p{1.2cm}|p{14.5cm}}
+\toprule
+\textbf{Prompt} & \begin{CJK*}{UTF8}{gbsn}模仿玄武门之变后，李渊的内心独白\end{CJK*} \\
+\midrule
+\textbf{CoT} & \begin{CJK*}{UTF8}{gbsn}用户让我模仿玄武门之变后李渊的内心独白。首先，我需要了解玄武门之变的背景和结果。李渊是唐朝的开国皇帝，他的儿子李世民在玄武门发动政变，杀死了兄弟李建成和李元吉，然后迫使李渊退位。这时候李渊的内心应该非常复杂，有震惊、悲痛、无奈，还有对权力失去的感慨。
+首先，我需要考虑李渊当时的处境。政变发生后，他可能意识到自己已经失去了对局势的控制，李世民掌握了军权，周围可能都是李世民的人。他的内心可能充满了对儿子们自相残杀的痛苦，毕竟李建成和李元吉是他的儿子，而李世民也是他一手培养的。
+然后，要考虑李渊作为父亲和皇帝的双重身份。作为父亲，他可能后悔没有处理好儿子之间的矛盾，导致兄弟相残。作为皇帝，他可能感到无力，自己辛苦打下的江山，现在不得不传给发动政变的儿子，这可能让他有挫败感。
+还要注意历史细节，比如李渊在政变后的反应，史书记载他很快禅位给李世民，可能是出于无奈。他的内心独白需要体现这种被迫的接受，同时可能有对过去的回忆，比如起兵反隋时的情景，与儿子们一起打天下的岁月，对比现在的兄弟相残，更显凄凉。
+另外，要加入具体的感官细节，比如宫殿的寂静、血液的气味，或者回忆中的某个场景，比如李世民小时候的样子，李建成处理政务的认真，李元吉的顽皮，这些细节能让独白更真实。
+还要考虑李渊的年龄和身体状况，政变时他已经六十岁左右，可能感到疲惫，无力对抗，只能接受现实。同时，他可能担心唐朝的未来，希望李世民能成为好皇帝，延续他的基业，这种矛盾的心理需要表现出来。
+最后，语言要符合古代帝王的身份，用词不能太现代，但也要有情感的流露，让读者感受到他的内心波动。需要避免过于直白，而是通过回忆、对比、内心的矛盾来表现。\end{CJK*} \\
+\midrule
+\textbf{Answer} & \begin{CJK*}{UTF8}{gbsn}
+%（案上《起居注》被风掀起半页，墨迹未干的"武德九年"四个字在烛火下忽明忽暗。
+我握着玉杯的手有些发颤，杯底与青铜托盘相碰，发出细碎的轻响。殿外龙首渠的水声比往日刺耳，恍惚间竟像是玄武门墙下的喊杀声。）
+世民的甲胄还沾着血吧？方才他跪下来时，我闻见那股铁锈味混着龙脑香，直往鼻腔里钻。他说建成、元吉谋逆，说左右将士护着他杀退乱党——可那是他亲兄长、亲弟弟啊，血肉里都流着我李家的血。昨日早朝时，建成还捧着山东的秋粮奏本，眉飞色舞说今年粟米能多囤三十万石；元吉前儿陪我猎鹿，那小崽子骑马撞翻了御苑的牡丹，还笑着说等花开了要摘最大的一朵给长孙后...
+（指节重重叩在案上，青瓷笔洗晃了晃，墨汁溅在"武德"二字上，晕开一团污痕。）
+二十年了。从晋阳宫那夜，我攥着李世民的手说"隋朝气数尽了"，到如今太极宫的飞檐上飘着"秦"字旗。他那时才十九岁，铠甲比人还大，骑在马上却像团火，能把整片霍邑城的雪都烧化。可谁能想到呢？当年我对窦氏说"这娃子有定鼎之才"，如今这定鼎之才，先要踏过兄弟的尸首。
+（突然剧烈咳嗽，茶盏跌在地上摔得粉碎。宦侍要进来收拾，被我挥手喝退。月光从殿顶藻井漏下来，照见丹墀下那株老银杏——武德四年栽的，那年世民刚平了洛阳，回来时在马背上抱着个锦盒，说是从隋宫废墟里寻的银杏核。）
+昨日清晨，我还在这树下教小孙子背《孝经》。那孩子奶声奶气念"身体发肤，受之父母"，我摸着他的小脑袋想，李家总算熬出个承平世了。哪知道日头还没到正午，太极宫的宫门锁了三重，连陈叔达都跪在我面前说"秦王功盖天下，四海归心"。四海归心...（突然笑出声，又迅速掐住喉咙，指缝里泄出破碎的呜咽）
+归心？当年我逼隋恭帝禅位时，也说过类似的话。原来这龙椅坐久了，连禅让的戏码都要重演一遍。只是我比杨侑强些——至少世民还肯跪下来叫我"父皇"，还肯给我留个"太上皇"的虚衔。（忽然想起什么，踉跄着走到妆台边，抽出个檀木匣。里面是窦氏临终前塞给我的发簪，银质已经有些氧化，刻着"同穴"二字。）
+阿窦，你走得早，倒免了看这出戏。那年你抱着刚出生的世民说"这孩子眉毛生得像你"，又摸着建成的后脑勺说"这娃子将来要当大哥"。你若还在，该怎么劝？是骂我教子无方，还是抱着孩子们哭到断气？（发簪"当啷"掉在地上，我蹲下去捡，膝盖撞在妆台角上，疼得眼眶发热）
+他们小时候多好啊。建成带着世民在花园里抓蛐蛐，元吉非要跟着，结果摔进荷花池，三个泥猴似的站在我面前。世民替两个兄弟顶罪，说"是我要带他们玩"，我举着藤条舍不得落下去...（喉间发紧，指甲深深掐进掌心）
+如今呢？建成的头被割下来示众，元吉的尸体扔在玄武门外。世民说"是乱军误伤"，可我知道，这天下最了解彼此软肋的，从来都是亲兄弟。他若不想杀，谁能伤得了太子半根汗毛？
+（窗外传来更鼓，已是三更。我扶着柱子站起来，龙袍拖在地上像条冰凉的蛇。案头放着世民刚送来的"禅位诏书"，他的字迹还是那么雄健，一笔一画都像当年在虎牢关写的军报。）
+也罢，也罢。这天下是他拿命拼来的，从雁门救驾开始，从柏壁之战、虎牢之战开始，他的江山从来不是靠太子的冠冕，是靠三千玄甲军的刀锋。我若再撑着不放，怕这太极宫的地砖下，要多埋一具老皇帝的尸首。（拿起诏书，墨迹未干，沾了我指尖的泪）
+只望他记着今日的血。记着兄弟的血，记着父亲的泪。莫要等他的儿子们，也像今日这样，把刀架在兄弟脖子上。（诏书被轻轻放下，我望着殿外渐白的天色，忽然想起那年在太原，世民站在城楼上指给我看："父亲，那片霞光像不像龙？"）
+龙啊...原来龙也是要吃龙的。
+%（晨光穿透纱帘，照见御案上未收的残棋。黑白二子纠缠成一团，恰似玄武门里的血肉。我伸手抹平棋盘，落子声轻得像一声叹息。）
+\end{CJK*} \\
+\bottomrule
+\end{tabular}
+\caption{Case 3 on Creative Writing.}
+\label{tbl:creative_writing_case3}
+\end{table}
+

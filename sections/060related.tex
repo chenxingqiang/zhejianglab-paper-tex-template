@@ -1,0 +1,43 @@
+\section{Related Work}
+
+Our adaptive difficulty training framework builds upon and extends several lines of research in machine learning, cognitive science, and educational psychology.
+
+% O1. R1. QwQ. Grok. Gemini-thinking. Claude-3.7 thinking
+
+% \subsection{Reasoning Models}
+
+% \subsection{Reinforcement Learning}
+
+
+Test-time scaling~\cite{qwq,grok,gemini-thinking,claude3.7} such as OpenAI’s o1~\cite{o1} and DeepSeek’s R1~\cite{r1} have catalyzed a profound paradigm shift in LLMs~\cite{gpt3,gpt4}. By enabling extended CoT reasoning~\cite{cot} and eliciting sophisticated reasoning capabilities, these methods empower LLMs to excel in complex mathematical and coding tasks, including those from competitions like the AIME and Codeforces.
+At the core of this transformation is large-scale reinforcement learning, which facilitates the emergence of complex reasoning behaviors—such as self-verification and iterative refinement. 
+However, the critical methodologies and algorithms underpinning scalable RL training have largely remained obscure, often omitted from the technical documentation of existing reasoning models~\cite{o1,r1,gpt3,gpt4,cot}.
+In this paper, we introduce an SOTA-level model \method and introduce the details to achieve the performance from three aspects: Data, RL algorithm, and RL infrastructure.
+
+\subsection{Curriculum Learning and Adaptive Training}
+
+\textbf{Curriculum Learning.} The concept of curriculum learning was formalized by Bengio et al. \citep{bengio2009curriculum}, who demonstrated that training models with examples of gradually increasing difficulty could lead to better generalization and faster convergence. This insight was inspired by human education, where students typically progress from simpler to more complex concepts. Subsequent work by Graves et al. \citep{graves2017automated} introduced automated curriculum learning, which uses bandit algorithms to select tasks that maximize the learning progress. In contrast to these approaches that rely on static or pre-defined difficulty progressions, our framework dynamically adjusts both the difficulty assessment and sampling strategy based on model performance.
+
+\textbf{Self-Paced Learning.} Kumar et al. \citep{kumar2010self} introduced self-paced learning, where the model learns by selecting examples according to its current capabilities. This concept was extended by Jiang et al. \citep{jiang2015self} with self-paced curriculum learning that combines teacher-defined curricula with the model's self-assessment. Our approach extends this line of work by developing sophisticated metrics for learning value estimation and incorporating multi-dimensional difficulty assessment.
+
+\textbf{Reinforcement Learning with Curriculum.} In reinforcement learning, curriculum approaches have shown significant benefits. Narvekar et al. \citep{narvekar2020curriculum} systematically reviewed curriculum methods in RL, demonstrating their effectiveness for complex tasks. OpenAI's work on solving Rubik's Cube with a robotic hand \citep{akkaya2019solving} employed Automatic Domain Randomization (ADR) to progressively increase task difficulty. Our adaptive sampling algorithm draws inspiration from these RL techniques but adapts them to the unique challenges of reasoning task training.
+
+\subsection{Difficulty Assessment in AI}
+
+\textbf{Problem Difficulty Estimation.} Several approaches have been proposed for estimating the difficulty of problems for AI systems. Leike et al. \citep{leike2022capacity} introduced capacity measures to quantify model capabilities across different difficulty levels. Srivastava et al. \citep{srivastava2022beyond} developed the BIG-Bench benchmark with calibrated difficulty levels. Our work extends these approaches by developing fine-grained multi-dimensional metrics specifically for reasoning tasks.
+
+\textbf{Performance-Based Difficulty Calibration.} Recent work by Hendrycks et al. \citep{hendrycks2021measuring} used empirical model performance to calibrate difficulty in mathematical reasoning tasks. Similarly, Brown et al. \citep{brown2020language} analyzed GPT-3's performance across tasks of varying difficulties to understand capability patterns. Our empirical difficulty calibration system builds on these insights while adding robust validation through our specialized difficulty estimation model.
+
+\subsection{Reasoning Enhancement in LLMs}
+
+\textbf{Chain-of-Thought (CoT) Research.} Chain-of-Thought prompting, introduced by Wei et al. \citep{wei2022chain} and advanced by Kojima et al. \citep{kojima2022large}, Wang et al. \citep{wang2022self,wang2023selfconsistency}, and Zhou et al. \citep{zhou2022least}, encourages models to break down complex problems into step-by-step reasoning. Variants include Zero-shot CoT \citep{kojima2022large}, Self-consistency CoT \citep{wang2022self}, and Least-to-Most prompting \citep{zhou2022least}. Our performance evaluation system draws on these structured reasoning approaches to analyze model outputs.
+
+\textbf{Advanced Reasoning Architectures.} Recent architectural innovations have focused on enhancing reasoning capabilities through specialized components. Yao et al. \citep{yao2023tree} introduced Tree of Thought, which explores multiple reasoning paths simultaneously. Zheng et al. \citep{zheng2023algorithm} proposed Algorithm of Thought to adapt algorithmic thinking to language models. DeepMind's Gopher \citep{rae2021scaling} and subsequent models investigate scaling relationship with reasoning. Our work complements these architectural approaches by providing an orthogonal training methodology that can potentially benefit any reasoning model architecture.
+
+\textbf{State-of-the-Art Reasoning Models.} Our experimental comparisons build upon recent advances in reasoning-focused models. OpenAI's o1 series \citep{openai2023gpt4}, DeepSeek's R1 \citep{deepseek2023r1}, Google's Gemini 2.5 \citep{google2023gemini}, and Anthropic's Claude 3.7 \citep{anthropic2023claude} represent the current state of the art in reasoning capabilities. While these models employ various proprietary techniques, our adaptive difficulty training framework provides a transparent, generalizable approach to reasoning enhancement that could benefit all these model types.
+
+\subsection{Automatic Problem Generation}
+
+\textbf{Automated Mathematical Problem Creation.} Zhou et al. \citep{zhou2020automatic} demonstrated the feasibility of generating mathematical problems with controllable difficulty. Building on this, Wang et al. \citep{wang2021automatic} introduced methods to verify the validity of generated mathematical problems. Our approach extends these techniques with more sophisticated control over difficulty parameters and comprehensive verification systems.
+
+\textbf{Programming Challenge Generation.} Zavershynskyi et al. \citep{zavershynskyi2018naps} developed NAPS, a system for generating programming challenges with verifiable solutions. Similarly, Li et al. \citep{li2022competition} focused on creating competition-level programming problems. Our work integrates these insights into a unified framework that spans multiple reasoning domains with consistent difficulty calibration.~\cite{o1,r1,gpt3,gpt4,cot}.

@@ -1,0 +1,40 @@
+# LaTeX temporary files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.dvi
+*.xdv
+*.pdf
+*.ps
+*.run.xml
+*.bcf
+*.nav
+*.snm
+*.vrb
+*.thm
+*.toc
+**/auto/
+.DS_Store
+
+# Backup files
+*~
+*.backup
+*.bak
+*.sav
+
+# Build directory
+build/
+
+# Editor temporary files
+.vscode/
+.idea/
+*.swp
+*.swo
