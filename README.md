@@ -2,6 +2,11 @@
 
 This repository contains a LaTeX template for academic papers, designed for researchers at Zhejiang Lab.
 
+## Preview
+
+![First page of the paper](images/paper_first_page-01.png)
+
+
 ## Features
 
 - Professional academic paper styling
