@@ -127,35 +127,8 @@ Beyond raw performance metrics, we analyze qualitative differences in the reason
 
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            ybar,
-            bar width=10pt,
-            width=0.9\linewidth,
-            height=6cm,
-            ymin=0, ymax=100,
-            symbolic x coords={Step Accuracy, Conceptual Correctness, Path Optimality, Error Recovery},
-            xtick=data,
-            ylabel={Score (\%)},
-            legend style={at={(0.5,-0.15)},anchor=north,legend columns=4},
-            nodes near coords,
-            nodes near coords style={font=\footnotesize},
-            enlarge x limits=0.15,
-        ]
-        
-        \addplot[fill=blue!60, pattern=north east lines] coordinates {
-            (Step Accuracy, 78.3) (Conceptual Correctness, 82.4) (Path Optimality, 67.8) (Error Recovery, 52.1)};
-        \addplot[fill=red!60] coordinates {
-            (Step Accuracy, 68.5) (Conceptual Correctness, 73.2) (Path Optimality, 54.3) (Error Recovery, 31.8)};
-        \addplot[fill=black!60] coordinates {
-            (Step Accuracy, 71.4) (Conceptual Correctness, 75.8) (Path Optimality, 58.9) (Error Recovery, 35.2)};
-        \addplot[fill=green!60!black] coordinates {
-            (Step Accuracy, 74.7) (Conceptual Correctness, 78.3) (Path Optimality, 62.5) (Error Recovery, 41.3)};
-
-        \legend{AdaptDifficulty, Static Distribution, Manual Curriculum, Difficulty-Based}
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Analysis of reasoning quality across different training approaches.}
+    \includegraphics[width=\textwidth]{figures/performance_comparison.png}
+    \caption{Performance comparison of reasoning quality metrics across different training approaches. The bar chart shows AdaptDifficulty consistently outperforms baseline methods in step accuracy, conceptual correctness, path optimality, and error recovery.}
     \label{fig:reasoning-quality}
 \end{figure}
 

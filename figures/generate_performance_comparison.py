@@ -99,8 +99,8 @@ ax.annotate('AdaptDifficulty consistently\noutperforms static methods',
             fontsize=9)
 
 # Title below the figure like in the example
-fig.text(0.5, 0.01, 'Figure 1: Performance improvements of different training approaches across metrics.', 
-         ha='center', va='bottom', fontsize=11)
+# fig.text(0.5, 0.01, 'Figure 1: Performance improvements of different training approaches across metrics.', 
+#          ha='center', va='bottom', fontsize=11)
 
 # Tight layout with space for the title
 plt.tight_layout(rect=[0, 0.07, 1, 1])

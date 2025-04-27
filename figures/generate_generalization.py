@@ -91,8 +91,8 @@ ax.yaxis.grid(True, linestyle='-', alpha=0.2)
 ax.legend(ncol=4, loc='upper center', bbox_to_anchor=(0.5, -0.08), frameon=False, handlelength=2.5)
 
 # Title below the figure like in the example
-fig.text(0.5, 0.01, 'Figure 4: Analysis of reasoning quality across different training approaches.', 
-         ha='center', va='bottom', fontsize=11)
+# fig.text(0.5, 0.01, 'Figure 4: Analysis of reasoning quality across different training approaches.', 
+#          ha='center', va='bottom', fontsize=11)
 
 # Tight layout with space for the title
 plt.tight_layout(rect=[0, 0.07, 1, 1])

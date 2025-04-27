@@ -111,9 +111,9 @@ ax.annotate(efficiency_text,
 # Add legend below the chart, similar to example
 ax.legend(ncol=4, loc='upper center', bbox_to_anchor=(0.5, -0.08), frameon=False, handlelength=2.5)
 
-# Title below the figure like in the example
-fig.text(0.5, 0.01, 'Figure 2: Training efficiency comparison between different approaches.', 
-         ha='center', va='bottom', fontsize=11)
+# # Title below the figure like in the example
+# fig.text(0.5, 0.01, 'Figure 2: Training efficiency comparison between different approaches.', 
+#          ha='center', va='bottom', fontsize=11)
 
 # Tight layout with space for the title
 plt.tight_layout(rect=[0, 0.07, 1, 1])
